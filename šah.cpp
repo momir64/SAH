@@ -199,6 +199,7 @@ int main() {
 			istorija.clear();
 			istorija.push_back(tabla);
 			brPoteza = 0;
+			brPotezaMax = 0;
 			NoviPotez(tabla);
 			ObrisiTerminal();
 
