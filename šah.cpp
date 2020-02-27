@@ -57,8 +57,7 @@ CONSOLE_CURSOR_INFO kursor;
 HANDLE ConsoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE ConsoleInputHandle = GetStdHandle(STD_INPUT_HANDLE);
 
-typedef struct
-{
+typedef struct {
 	short bojaPolja;
 	short stanjePolja;
 	wchar_t figura[4];
@@ -66,8 +65,7 @@ typedef struct
 	short anpasan;
 } Polje;
 
-typedef struct
-{
+typedef struct {
 	Polje polje[8][8];
 	Polje levo[8][2];
 	Polje desno[8][2];
@@ -125,8 +123,7 @@ void OdaberiVelicinu();
 //void AnimacijaUcitaj();
 BOOL WINAPI EXIT(DWORD CEvent);
 
-int main()
-{
+int main() {
 	system("MODE 16, 1");
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)EXIT, TRUE);
 	SacuvajConsoleKey();
@@ -135,6 +132,8 @@ int main()
 	NapraviTablu(tabla);
 	istorija.push_back(tabla);
 
+	//AnimacijaUcitaj();
+
 	PodesiKonzolu();
 	CentrirajKonzolu();
 	OdstampajKonzolu();
@@ -142,10 +141,8 @@ int main()
 
 	int x, y, xizb, yizb, i = 35;
 
-	while (1)
-	{
-		if (brPoteza % 2 == 1 && !JelMozeIgratiCrni(tabla) && JelSahCrni(tabla, 0, 0))
-		{
+	while (1) {
+		if (brPoteza % 2 == 1 && !JelMozeIgratiCrni(tabla) && JelSahCrni(tabla, 0, 0)) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 82);
 			else if (boja == TAMNO)
@@ -157,8 +154,7 @@ int main()
 			gotoxy(10, 14);
 			wprintf(L"Beli je pobednik");
 		}
-		else if (brPoteza % 2 == 0 && !JelMozeIgratiBeli(tabla) && JelSahBeli(tabla, 0, 0))
-		{
+		else if (brPoteza % 2 == 0 && !JelMozeIgratiBeli(tabla) && JelSahBeli(tabla, 0, 0)) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 82);
 			else if (boja == TAMNO)
@@ -170,8 +166,7 @@ int main()
 			gotoxy(10, 14);
 			wprintf(L"Crni je pobednik");
 		}
-		else if (brPoteza % 2 == 1 && !JelMozeIgratiCrni(tabla))
-		{
+		else if (brPoteza % 2 == 1 && !JelMozeIgratiCrni(tabla)) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 82);
 			else if (boja == TAMNO)
@@ -183,8 +178,7 @@ int main()
 			gotoxy(8, 14);
 			wprintf(L"Beli je napravio pat");
 		}
-		else if (brPoteza % 2 == 0 && !JelMozeIgratiBeli(tabla))
-		{
+		else if (brPoteza % 2 == 0 && !JelMozeIgratiBeli(tabla)) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 82);
 			else if (boja == TAMNO)
@@ -202,8 +196,7 @@ int main()
 		UcitajKlik(x, y);
 		ObrisiTerminal();
 
-		if (y == 0 && (x == 4 || x == 5))
-		{
+		if (y == 0 && (x == 4 || x == 5)) {
 			NapraviTablu(tabla);
 			istorija.clear();
 			istorija.push_back(tabla);
@@ -213,12 +206,10 @@ int main()
 
 			OsveziTablu(tabla);
 		}
-		else if (y == 0 && (x == 0 || x == 1))
-		{
+		else if (y == 0 && (x == 0 || x == 1)) {
 			SacuvajIgru();
 		}
-		else if (y == 0 && (x == 2 || x == 3))
-		{
+		else if (y == 0 && (x == 2 || x == 3)) {
 			wchar_t ime[18], zn;
 			short pom;
 			ObrisiTerminal();
@@ -238,33 +229,28 @@ int main()
 
 			bool jednom = 1;
 
-			for (int i = 0; i < 18; i++)
-			{
+			for (int i = 0; i < 18; i++) {
 				fflush(stdin);
 				zn = _getwch();
 				fflush(stdin);
 
-				if ((zn == 13 && i != 0) || i == 14)
-				{
+				if ((zn == 13 && i != 0) || i == 14) {
 					Sleep(100);
 					SakriKursor();
 					ime[i] = '\0';
 					break;
 				}
-				else if (zn == 13)
-				{
+				else if (zn == 13) {
 					jednom = 0;
 					break;
 				}
-				else if (zn == 8)
-				{
+				else if (zn == 8) {
 					gotoxy(14 + i, 14);
 					_putwch(' ');
 					gotoxy(14 + i, 14);
 					i -= 2;
 				}
-				else
-				{
+				else {
 					gotoxy(15 + i, 14);
 					_putwch(zn);
 					ime[i] = zn;
@@ -277,14 +263,12 @@ int main()
 			if (jednom) {
 				ifstream ulaz(wcscat(ime, L".igra"));
 
-				if (ulaz.is_open())
-				{
+				if (ulaz.is_open()) {
 					ulaz >> brPoteza;
 
 					istorija.clear();
 
-					for (int a = 0; a <= brPoteza; a++)
-					{
+					for (int a = 0; a <= brPoteza; a++) {
 						ulaz >> tabla.brlevo;
 						ulaz >> tabla.brdesno;
 						ulaz >> tabla.krajigre;
@@ -293,8 +277,7 @@ int main()
 						ulaz >> tabla.velikarbeli;
 						ulaz >> tabla.velikarcrni;
 
-						for (int i = 0; i < 16; i++)
-						{
+						for (int i = 0; i < 16; i++) {
 							ulaz >> pom;
 							wcscpy(tabla.levo[i / 2][i % 2].figura, BrojUFiguru(pom));
 							ulaz >> pom;
@@ -302,8 +285,7 @@ int main()
 						}
 
 						for (int i = 0; i < 8; i++)
-							for (int j = 0; j < 8; j++)
-							{
+							for (int j = 0; j < 8; j++) {
 								ulaz >> tabla.polje[i][j].anpasan;
 								ulaz >> tabla.polje[i][j].bojaFigure;
 								ulaz >> pom;
@@ -316,8 +298,7 @@ int main()
 
 					ulaz.close();
 				}
-				else
-				{
+				else {
 					gotoxy(4, 14);
 
 					if (boja == SVETLO)
@@ -334,8 +315,7 @@ int main()
 				OsveziTablu(tabla);
 			}
 		}
-		else if (y == 0 && (x == 6 || x == 7))
-		{
+		else if (y == 0 && (x == 6 || x == 7)) {
 			boja++;
 
 			if (boja == 3)
@@ -346,20 +326,17 @@ int main()
 
 			OsveziTablu(tabla);
 		}
-		else if (y == 0 && (x == 8 || x == 9))
-		{
+		else if (y == 0 && (x == 8 || x == 9)) {
 			short pom = velicina;
 			OdaberiVelicinu();
 
-			if (pom != velicina)
-			{
+			if (pom != velicina) {
 				PodesiVelicinu(velicina);
 				OdstampajKonzolu();
 				OsveziTablu(tabla);
 			}
 		}
-		else if (y == 0 && (x == 10 || x == 11) && brPoteza > 0)
-		{
+		else if (y == 0 && (x == 10 || x == 11) && brPoteza > 0) {
 			tabla = istorija[brPoteza - (long long)1];
 			if (brPotezaMax < brPoteza)
 				brPotezaMax = brPoteza;
@@ -369,18 +346,15 @@ int main()
 
 			OsveziTablu(tabla);
 		}
-		else if (y == 0 && (x == 12 || x == 13) && brPotezaMax > 0 && redo && brPotezaMax > brPoteza)
-		{
+		else if (y == 0 && (x == 12 || x == 13) && brPotezaMax > 0 && redo && brPotezaMax > brPoteza) {
 			tabla = istorija[brPoteza + (long long)1];
 			brPoteza++;
 			ObrisiTerminal();
 
 			OsveziTablu(tabla);
 		}
-		else if (y == 0 && (x == 32 || x == 33))
-		{
-			if (rotacija == UKLJUCENO)
-			{
+		else if (y == 0 && (x == 32 || x == 33)) {
+			if (rotacija == UKLJUCENO) {
 				rotacija = ISKLJUCENO;
 
 				if (boja == SVETLO)
@@ -393,8 +367,7 @@ int main()
 				gotoxy(32, 0);
 				wprintf(L"");
 			}
-			else
-			{
+			else {
 				rotacija = UKLJUCENO;
 
 				if (boja == SVETLO)
@@ -412,8 +385,7 @@ int main()
 
 			OsveziTablu(tabla);
 		}
-		else if (y == 0 && (x == 34 || x == 35))
-		{
+		else if (y == 0 && (x == 34 || x == 35)) {
 			int a, b;
 			SetConsoleTextAttribute(ConsoleOutputHandle, 255);
 
@@ -433,21 +405,17 @@ int main()
 			OdstampajKonzolu();
 			OdstampajTablu(tabla);
 		}
-		else if (y > 2 && y < 11 && x > 9 && x < 26 && tabla.krajigre == 0 && JelMozeIgratiBeli(tabla) && JelMozeIgratiBeli(tabla))
-		{
+		else if (y > 2 && y < 11 && x > 9 && x < 26 && tabla.krajigre == 0 && JelMozeIgratiBeli(tabla) && JelMozeIgratiBeli(tabla)) {
 			if (brPoteza % 2 && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla))
 				ObrnutaPozicijaNaTabli(x, y);
 			else
 				PozicijaNaTabli(x, y);
 
-			if (tabla.polje[y][x].stanjePolja == NAPADNUTO && wcscmp(tabla.polje[y][x].figura, KRALJ))
-			{
+			if (tabla.polje[y][x].stanjePolja == NAPADNUTO && wcscmp(tabla.polje[y][x].figura, KRALJ)) {
 				PozicijaIzabranog(xizb, yizb, tabla);
 
-				if (tabla.polje[yizb][xizb].bojaFigure == BELO && tabla.brlevo < 16)
-				{
-					if (tabla.polje[y + 1][x].anpasan == UKLJUCENO)
-					{
+				if (tabla.polje[yizb][xizb].bojaFigure == BELO && tabla.brlevo < 16) {
+					if (tabla.polje[y + 1][x].anpasan == UKLJUCENO) {
 						wcscpy(tabla.levo[tabla.brlevo / 2][tabla.brlevo % 2].figura, PIJUN);
 						wcscpy(tabla.polje[y + 1][x].figura, PRAZNO);
 					}
@@ -456,10 +424,8 @@ int main()
 
 					tabla.brlevo++;
 				}
-				else if (tabla.brdesno < 16)
-				{
-					if (tabla.polje[y - 1][x].anpasan == UKLJUCENO)
-					{
+				else if (tabla.brdesno < 16) {
+					if (tabla.polje[y - 1][x].anpasan == UKLJUCENO) {
 						wcscpy(tabla.desno[tabla.brdesno / 2][tabla.brdesno % 2].figura, PIJUN);
 						wcscpy(tabla.polje[y - 1][x].figura, PRAZNO);
 					}
@@ -477,13 +443,11 @@ int main()
 					tabla.velikarcrni = ISKLJUCENO;
 				else if ((xizb == 7 && yizb == 0) || (x == 7 && y == 0))
 					tabla.malarcrni = ISKLJUCENO;
-				else if (xizb == 4 && yizb == 7)
-				{
+				else if (xizb == 4 && yizb == 7) {
 					tabla.malarbeli = ISKLJUCENO;
 					tabla.velikarbeli = ISKLJUCENO;
 				}
-				else if (xizb == 4 && yizb == 0)
-				{
+				else if (xizb == 4 && yizb == 0) {
 					tabla.malarcrni = ISKLJUCENO;
 					tabla.velikarcrni = ISKLJUCENO;
 				}
@@ -494,13 +458,11 @@ int main()
 				NoviPotez(tabla);
 				ObrisiAnpasan(tabla);
 
-				if (!wcscmp(tabla.polje[y][x].figura, PIJUN) && ((tabla.polje[y][x].bojaFigure == BELO && y == 0) || (tabla.polje[y][x].bojaFigure == CRNO && y == 7)))
-				{
+				if (!wcscmp(tabla.polje[y][x].figura, PIJUN) && ((tabla.polje[y][x].bojaFigure == BELO && y == 0) || (tabla.polje[y][x].bojaFigure == CRNO && y == 7))) {
 					OdstampajTablu(tabla);
 					short zamena = ZameniPijuna();
 
-					switch (zamena)
-					{
+					switch (zamena) {
 					case 0:
 						wcscpy(tabla.polje[y][x].figura, KRALJICA);
 						break;
@@ -540,8 +502,7 @@ int main()
 
 				if (JelSahBeli(tabla, 0, 0))
 					for (int i = 0; i < 64; i++)
-						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO)
-						{
+						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO) {
 							tabla.polje[i / 8][i % 8].stanjePolja = NAPADNUTO;
 							OsveziTablu(tabla);
 							break;
@@ -549,15 +510,13 @@ int main()
 
 				if (JelSahCrni(tabla, 0, 0))
 					for (int i = 0; i < 64; i++)
-						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO)
-						{
+						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO) {
 							tabla.polje[i / 8][i % 8].stanjePolja = NAPADNUTO;
 							OsveziTablu(tabla);
 							break;
 						}
 
-				for (long i = brPotezaMax; i > brPoteza&& redo; i--)
-				{
+				for (long i = brPotezaMax; i > brPoteza&& redo; i--) {
 					istorija.erase(istorija.begin() + i);
 					brPotezaMax = brPoteza;
 				}
@@ -567,10 +526,8 @@ int main()
 				sacekaj = UKLJUCENO;
 
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, KRALJ))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, KRALJ)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 
 					PostaviKralja(tabla, x, y);
@@ -578,50 +535,40 @@ int main()
 				else
 					NoviPotez(tabla);
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, PIJUN))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, PIJUN)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 					PostaviPijuna(tabla, x, y);
 				}
 				else
 					NoviPotez(tabla);
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, KONJ))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, KONJ)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 					PostaviKonja(tabla, x, y);
 				}
 				else
 					NoviPotez(tabla);
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, TOP))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, TOP)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 					PostaviTopa(tabla, x, y);
 				}
 				else
 					NoviPotez(tabla);
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, LOVAC))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, LOVAC)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 					PostaviLovca(tabla, x, y);
 				}
 				else
 					NoviPotez(tabla);
 			}
-			else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA))
-			{
-				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1))
-				{
+			else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA)) {
+				if ((tabla.polje[y][x].bojaFigure == BELO && brPoteza % 2 == 0) || (tabla.polje[y][x].bojaFigure == CRNO && brPoteza % 2 == 1)) {
 					NoviPotez(tabla);
 					PostaviKraljicu(tabla, x, y);
 				}
@@ -630,8 +577,7 @@ int main()
 			}
 			else if (!wcscmp(tabla.polje[y][x].figura, PRAZNO))
 				NoviPotez(tabla);
-			else if (!wcscmp(tabla.polje[y][x].figura, TACKA))
-			{
+			else if (!wcscmp(tabla.polje[y][x].figura, TACKA)) {
 				PozicijaIzabranog(xizb, yizb, tabla);
 				wcscpy(tabla.polje[y][x].figura, tabla.polje[yizb][xizb].figura);
 				wcscpy(tabla.polje[yizb][xizb].figura, PRAZNO);
@@ -639,15 +585,13 @@ int main()
 
 				ObrisiAnpasan(tabla);
 
-				if (tabla.malarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 6 && y == 7)
-				{
+				if (tabla.malarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 6 && y == 7) {
 					wcscpy(tabla.polje[7][7].figura, PRAZNO);
 					wcscpy(tabla.polje[7][5].figura, TOP);
 					tabla.polje[7][5].bojaFigure = BELO;
 				}
 
-				if (tabla.velikarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 1 && y == 7)
-				{
+				if (tabla.velikarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 1 && y == 7) {
 					wcscpy(tabla.polje[7][0].figura, PRAZNO);
 					wcscpy(tabla.polje[7][1].figura, PRAZNO);
 					wcscpy(tabla.polje[7][2].figura, KRALJ);
@@ -656,15 +600,13 @@ int main()
 					tabla.polje[7][3].bojaFigure = BELO;
 				}
 
-				if (tabla.malarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 6 && y == 0)
-				{
+				if (tabla.malarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 6 && y == 0) {
 					wcscpy(tabla.polje[0][7].figura, PRAZNO);
 					wcscpy(tabla.polje[0][5].figura, TOP);
 					tabla.polje[0][5].bojaFigure = CRNO;
 				}
 
-				if (tabla.velikarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 1 && y == 0)
-				{
+				if (tabla.velikarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 1 && y == 0) {
 					wcscpy(tabla.polje[0][0].figura, PRAZNO);
 					wcscpy(tabla.polje[0][1].figura, PRAZNO);
 					wcscpy(tabla.polje[0][2].figura, KRALJ);
@@ -684,26 +626,22 @@ int main()
 					tabla.velikarcrni = ISKLJUCENO;
 				else if (xizb == 7 && yizb == 0)
 					tabla.malarcrni = ISKLJUCENO;
-				else if (xizb == 4 && yizb == 7)
-				{
+				else if (xizb == 4 && yizb == 7) {
 					tabla.malarbeli = ISKLJUCENO;
 					tabla.velikarbeli = ISKLJUCENO;
 				}
-				else if (xizb == 4 && yizb == 0)
-				{
+				else if (xizb == 4 && yizb == 0) {
 					tabla.malarcrni = ISKLJUCENO;
 					tabla.velikarcrni = ISKLJUCENO;
 				}
 
 				NoviPotez(tabla);
 
-				if (!wcscmp(tabla.polje[y][x].figura, PIJUN) && ((tabla.polje[y][x].bojaFigure == BELO && y == 0) || (tabla.polje[y][x].bojaFigure == CRNO && y == 7)))
-				{
+				if (!wcscmp(tabla.polje[y][x].figura, PIJUN) && ((tabla.polje[y][x].bojaFigure == BELO && y == 0) || (tabla.polje[y][x].bojaFigure == CRNO && y == 7))) {
 					OdstampajTablu(tabla);
 					short zamena = ZameniPijuna();
 
-					switch (zamena)
-					{
+					switch (zamena) {
 					case 0:
 						wcscpy(tabla.polje[y][x].figura, KRALJICA);
 						break;
@@ -723,8 +661,7 @@ int main()
 
 				if (JelSahBeli(tabla, 0, 0))
 					for (int i = 0; i < 64; i++)
-						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO)
-						{
+						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO) {
 							tabla.polje[i / 8][i % 8].stanjePolja = NAPADNUTO;
 							OsveziTablu(tabla);
 							break;
@@ -732,15 +669,13 @@ int main()
 
 				if (JelSahCrni(tabla, 0, 0))
 					for (int i = 0; i < 64; i++)
-						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO)
-						{
+						if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO) {
 							tabla.polje[i / 8][i % 8].stanjePolja = NAPADNUTO;
 							OsveziTablu(tabla);
 							break;
 						}
 
-				for (long i = brPotezaMax; i > brPoteza&& redo; i--)
-				{
+				for (long i = brPotezaMax; i > brPoteza&& redo; i--) {
 					istorija.erase(istorija.begin() + i);
 					brPotezaMax = brPoteza;
 				}
@@ -752,16 +687,14 @@ int main()
 
 			OsveziTablu(tabla);
 		}
-		else
-		{
+		else {
 			NoviPotez(tabla);
 			OsveziTablu(tabla);
 		}
 	}
 }
 
-void NapraviTablu(Tabla& tabla)
-{
+void NapraviTablu(Tabla& tabla) {
 	tabla.brlevo = 0;
 	tabla.brdesno = 0;
 	tabla.krajigre = 0;
@@ -771,8 +704,7 @@ void NapraviTablu(Tabla& tabla)
 	tabla.velikarcrni = UKLJUCENO;
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
+		for (int j = 0; j < 8; j++) {
 			tabla.polje[i][j].stanjePolja = NEUTRALNO;
 			tabla.polje[i][j].anpasan = ISKLJUCENO;
 
@@ -783,14 +715,12 @@ void NapraviTablu(Tabla& tabla)
 		}
 
 	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 8; j++)
-		{
+		for (int j = 0; j < 8; j++) {
 			tabla.polje[i][j].bojaFigure = CRNO;
 			tabla.polje[i + 6][j].bojaFigure = BELO;
 		}
 
-	for (int j = 0; j < 8; j++)
-	{
+	for (int j = 0; j < 8; j++) {
 		wcscpy(tabla.polje[1][j].figura, PIJUN);
 		wcscpy(tabla.polje[6][j].figura, PIJUN);
 	}
@@ -817,15 +747,13 @@ void NapraviTablu(Tabla& tabla)
 	wcscpy(tabla.polje[7][4].figura, KRALJ);
 
 	for (int i = 2; i < 6; i++)
-		for (int j = 0; j < 8; j++)
-		{
+		for (int j = 0; j < 8; j++) {
 			tabla.polje[i][j].bojaFigure = ZELENO;
 			wcscpy(tabla.polje[i][j].figura, PRAZNO);
 		}
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 2; j++)
-		{
+		for (int j = 0; j < 2; j++) {
 			tabla.levo[i][j].anpasan = ISKLJUCENO;
 			tabla.levo[i][j].bojaFigure = CRNO;
 			tabla.levo[i][j].stanjePolja = NEUTRALNO;
@@ -837,16 +765,14 @@ void NapraviTablu(Tabla& tabla)
 		}
 }
 
-void SakriKursor()
-{
+void SakriKursor() {
 	CONSOLE_CURSOR_INFO info;
 	info.dwSize = 100;
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(ConsoleOutputHandle, &info);
 }
 
-void ObrisiEkran()
-{
+void ObrisiEkran() {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	DWORD count;
 	DWORD cellCount;
@@ -863,33 +789,28 @@ void ObrisiEkran()
 	SetConsoleCursorPosition(ConsoleOutputHandle, homeCoords);
 }
 
-void gotoxy(int x, int y)
-{
+void gotoxy(int x, int y) {
 	COORD koordinate;
 	koordinate.X = x;
 	koordinate.Y = y;
 	SetConsoleCursorPosition(ConsoleOutputHandle, koordinate);
 }
 
-void UcitajKlik(int& x, int& y)
-{
+void UcitajKlik(int& x, int& y) {
 	DWORD info;
 	INPUT_RECORD input;
 	SetConsoleMode(ConsoleInputHandle, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
 	ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
-	if (input.Event.MouseEvent.dwButtonState != 0x0001)
-	{
+	if (input.Event.MouseEvent.dwButtonState != 0x0001) {
 	GOBACK:
 		ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
-		if (input.Event.MouseEvent.dwButtonState == 0x0001)
-		{
+		if (input.Event.MouseEvent.dwButtonState == 0x0001) {
 		GOBACK2:
 			ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
-			if (input.Event.MouseEvent.dwButtonState != 0x0001)
-			{
+			if (input.Event.MouseEvent.dwButtonState != 0x0001) {
 				x = input.Event.MouseEvent.dwMousePosition.X;
 				y = input.Event.MouseEvent.dwMousePosition.Y;
 			}
@@ -903,8 +824,7 @@ void UcitajKlik(int& x, int& y)
 		UcitajKlik(x, y);
 }
 
-void CentrirajKonzolu()
-{
+void CentrirajKonzolu() {
 	RECT rectClient, rectWindow;
 	HWND hWnd = GetConsoleWindow();
 	GetClientRect(hWnd, &rectClient);
@@ -916,8 +836,7 @@ void CentrirajKonzolu()
 	SetWindowPos(GetConsoleWindow(), HWND_TOP, posx, posy, 0, 0, SWP_NOSIZE);
 }
 
-void PodesiKonzolu()
-{
+void PodesiKonzolu() {
 	GetConsoleCursorInfo(ConsoleOutputHandle, &kursor);
 	SakriKursor();
 	HWND consoleWindow = GetConsoleWindow();
@@ -963,8 +882,7 @@ void PodesiKonzolu()
 	_setmode(_fileno(stdout), _O_U8TEXT);
 }
 
-void PodesiVelicinu(int i)
-{
+void PodesiVelicinu(int i) {
 	CONSOLE_FONT_INFOEX info = { 0 };
 	info.cbSize = sizeof(info);
 	info.dwFontSize.Y = i;
@@ -977,13 +895,11 @@ void PodesiVelicinu(int i)
 	system("MODE 36, 17");
 }
 
-void OdstampajTablu(Tabla tabla)
-{
+void OdstampajTablu(Tabla tabla) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
+		for (int j = 0; j < 8; j++) {
 			if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == CRNO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 177);
 			else if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == BELO)
@@ -1036,13 +952,11 @@ void OdstampajTablu(Tabla tabla)
 	OdstampajLevoDesno(tabla);
 }
 
-void ObrnutoOdstampajTablu(Tabla tabla)
-{
+void ObrnutoOdstampajTablu(Tabla tabla) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
+		for (int j = 0; j < 8; j++) {
 			if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == CRNO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 177);
 			else if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == BELO)
@@ -1097,13 +1011,11 @@ void ObrnutoOdstampajTablu(Tabla tabla)
 	OdstampajLevoDesno(tabla);
 }
 
-void OdstampajLevoDesno(Tabla tabla)
-{
+void OdstampajLevoDesno(Tabla tabla) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 2; j++)
-		{
+		for (int j = 0; j < 2; j++) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 81);
 			else if (boja == TAMNO)
@@ -1116,8 +1028,7 @@ void OdstampajLevoDesno(Tabla tabla)
 		}
 
 	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 2; j++)
-		{
+		for (int j = 0; j < 2; j++) {
 			if (boja == SVETLO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 80);
 			else if (boja == TAMNO)
@@ -1155,10 +1066,8 @@ void OdstampajLevoDesno(Tabla tabla)
 	wprintf(L"██");
 }
 
-void PozicijaNaTabli(int& x, int& y)
-{
-	switch (x)
-	{
+void PozicijaNaTabli(int& x, int& y) {
+	switch (x) {
 	case 10:
 	case 11:
 		x = 0;
@@ -1199,8 +1108,7 @@ void PozicijaNaTabli(int& x, int& y)
 		x = 7;
 	}
 
-	switch (y)
-	{
+	switch (y) {
 	case 10:
 		y = 7;
 		break;
@@ -1234,10 +1142,8 @@ void PozicijaNaTabli(int& x, int& y)
 	}
 }
 
-void ObrnutaPozicijaNaTabli(int& x, int& y)
-{
-	switch (x)
-	{
+void ObrnutaPozicijaNaTabli(int& x, int& y) {
+	switch (x) {
 	case 10:
 	case 11:
 		x = 7;
@@ -1278,8 +1184,7 @@ void ObrnutaPozicijaNaTabli(int& x, int& y)
 		x = 0;
 	}
 
-	switch (y)
-	{
+	switch (y) {
 	case 10:
 		y = 0;
 		break;
@@ -1313,11 +1218,9 @@ void ObrnutaPozicijaNaTabli(int& x, int& y)
 	}
 }
 
-void NoviPotez(Tabla& tabla)
-{
+void NoviPotez(Tabla& tabla) {
 	for (int a = 0; a < 8; a++)
-		for (int b = 0; b < 8; b++)
-		{
+		for (int b = 0; b < 8; b++) {
 			if (tabla.polje[a][b].stanjePolja == IZABRANO)
 				tabla.polje[a][b].stanjePolja = NEUTRALNO;
 
@@ -1332,8 +1235,7 @@ void NoviPotez(Tabla& tabla)
 		}
 }
 
-void ObrisiAnpasan(Tabla& tabla)
-{
+void ObrisiAnpasan(Tabla& tabla) {
 	for (int a = 0; a < 8; a++)
 		for (int b = 0; b < 8; b++)
 			if (tabla.polje[a][b].anpasan == UKLJUCENO)
@@ -1341,28 +1243,24 @@ void ObrisiAnpasan(Tabla& tabla)
 
 }
 
-void PozicijaIzabranog(int& xizb, int& yizb, Tabla tabla)
-{
+void PozicijaIzabranog(int& xizb, int& yizb, Tabla tabla) {
 	for (int a = 0; a < 8; a++)
 		for (int b = 0; b < 8; b++)
-			if (tabla.polje[a][b].stanjePolja == IZABRANO)
-			{
+			if (tabla.polje[a][b].stanjePolja == IZABRANO) {
 				yizb = a;
 				xizb = b;
 				return;
 			}
 }
 
-short JelUnutarTable(int x, int y)
-{
+short JelUnutarTable(int x, int y) {
 	if (x >= 0 && x <= 7 && y >= 0 && y <= 7)
 		return 1;
 	else
 		return 0;
 }
 
-void OdstampajKonzolu()
-{
+void OdstampajKonzolu() {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	gotoxy(0, 0);
@@ -1540,22 +1438,17 @@ void OdstampajKonzolu()
 	gotoxy(8, 11);	  	wprintf(L"████████████████████");
 }
 
-void OsveziTablu(Tabla tabla)
-{
-	if ((brPoteza % 2 && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla)) || (!JelMozeIgratiBeli(tabla) && rotacija == UKLJUCENO && brPoteza % 2 == 0))
-	{
-		if (sacekaj == UKLJUCENO && JelMozeIgratiBeli(tabla))
-		{
+void OsveziTablu(Tabla tabla) {
+	if ((brPoteza % 2 && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla)) || (!JelMozeIgratiBeli(tabla) && rotacija == UKLJUCENO && brPoteza % 2 == 0)) {
+		if (sacekaj == UKLJUCENO && JelMozeIgratiBeli(tabla)) {
 			OdstampajTablu(tabla);
 			Sleep(260);
 		}
 
 		ObrnutoOdstampajTablu(tabla);
 	}
-	else
-	{
-		if (sacekaj == UKLJUCENO && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla))
-		{
+	else {
+		if (sacekaj == UKLJUCENO && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla)) {
 			ObrnutoOdstampajTablu(tabla);
 			Sleep(260);
 		}
@@ -1564,8 +1457,7 @@ void OsveziTablu(Tabla tabla)
 	}
 }
 
-void ObrisiTerminal()
-{
+void ObrisiTerminal() {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	if (boja == SVETLO)
@@ -1583,8 +1475,7 @@ void ObrisiTerminal()
 	wprintf(L"████████████████████████████████");
 }
 
-Tabla StaviFiguruNaXY(Tabla tabla, int x, int y)
-{
+Tabla StaviFiguruNaXY(Tabla tabla, int x, int y) {
 	int xizb, yizb;
 	PozicijaIzabranog(xizb, yizb, tabla);
 	wcscpy(tabla.polje[y][x].figura, tabla.polje[yizb][xizb].figura);
@@ -1595,21 +1486,16 @@ Tabla StaviFiguruNaXY(Tabla tabla, int x, int y)
 	return tabla;
 }
 
-short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
-{
+short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj) {
 	int x = 0, y = 0;
 
-	for (int i = 0; i < 64; i++)
-	{
-		if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO)
-		{
-			if (JelUnutarTable(i % 8 + xpomeraj, i / 8 + ypomeraj))
-			{
+	for (int i = 0; i < 64; i++) {
+		if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == BELO) {
+			if (JelUnutarTable(i % 8 + xpomeraj, i / 8 + ypomeraj)) {
 				y = i / 8 + ypomeraj;
 				x = i % 8 + xpomeraj;
 			}
-			else
-			{
+			else {
 				x = i % 8;
 				y = i / 8;
 			}
@@ -1648,8 +1534,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 	if (!wcscmp(tabla.polje[y - 1][x - 2].figura, KONJ) && tabla.polje[y - 1][x - 2].bojaFigure == CRNO && JelUnutarTable(x - 2, y - 1))
 		return 1;
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y][x - i].figura, KRALJ) && tabla.polje[y][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y));
 		else if ((!wcscmp(tabla.polje[y][x - i].figura, TOP) || !wcscmp(tabla.polje[y][x - i].figura, KRALJICA)) && tabla.polje[y][x - i].bojaFigure == CRNO && JelUnutarTable(x - i, y))
 			return 1;
@@ -1657,8 +1542,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y][x + i].figura, KRALJ) && tabla.polje[y][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y));
 		else if ((!wcscmp(tabla.polje[y][x + i].figura, TOP) || !wcscmp(tabla.polje[y][x + i].figura, KRALJICA)) && tabla.polje[y][x + i].bojaFigure == CRNO && JelUnutarTable(x + i, y))
 			return 1;
@@ -1666,8 +1550,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x].figura, KRALJ) && tabla.polje[y - i][x].bojaFigure == BELO)) && JelUnutarTable(x, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x].figura, TOP) || !wcscmp(tabla.polje[y - i][x].figura, KRALJICA)) && tabla.polje[y - i][x].bojaFigure == CRNO && JelUnutarTable(x, y - i))
 			return 1;
@@ -1675,8 +1558,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x].figura, KRALJ) && tabla.polje[y + i][x].bojaFigure == BELO)) && JelUnutarTable(x, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x].figura, TOP) || !wcscmp(tabla.polje[y + i][x].figura, KRALJICA)) && tabla.polje[y + i][x].bojaFigure == CRNO && JelUnutarTable(x, y + i))
 			return 1;
@@ -1684,8 +1566,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x - i].figura, KRALJ) && tabla.polje[y - i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x - i].figura, LOVAC) || !wcscmp(tabla.polje[y - i][x - i].figura, KRALJICA)) && tabla.polje[y - i][x - i].bojaFigure == CRNO && JelUnutarTable(x - i, y - i))
 			return 1;
@@ -1693,8 +1574,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x + i].figura, KRALJ) && tabla.polje[y - i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x + i].figura, LOVAC) || !wcscmp(tabla.polje[y - i][x + i].figura, KRALJICA)) && tabla.polje[y - i][x + i].bojaFigure == CRNO && JelUnutarTable(x + i, y - i))
 			return 1;
@@ -1702,8 +1582,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x - i].figura, KRALJ) && tabla.polje[y + i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x - i].figura, LOVAC) || !wcscmp(tabla.polje[y + i][x - i].figura, KRALJICA)) && tabla.polje[y + i][x - i].bojaFigure == CRNO && JelUnutarTable(x - i, y + i))
 			return 1;
@@ -1711,8 +1590,7 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x + i].figura, KRALJ) && tabla.polje[y + i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x + i].figura, LOVAC) || !wcscmp(tabla.polje[y + i][x + i].figura, KRALJICA)) && tabla.polje[y + i][x + i].bojaFigure == CRNO && JelUnutarTable(x + i, y + i))
 			return 1;
@@ -1747,21 +1625,16 @@ short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj)
 	return 0;
 }
 
-short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
-{
+short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj) {
 	int x = 0, y = 0;
 
-	for (int i = 0; i < 64; i++)
-	{
-		if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO)
-		{
-			if (JelUnutarTable(i % 8 + xpomeraj, i / 8 + ypomeraj))
-			{
+	for (int i = 0; i < 64; i++) {
+		if (!wcscmp(tabla.polje[i / 8][i % 8].figura, KRALJ) && tabla.polje[i / 8][i % 8].bojaFigure == CRNO) {
+			if (JelUnutarTable(i % 8 + xpomeraj, i / 8 + ypomeraj)) {
 				y = i / 8 + ypomeraj;
 				x = i % 8 + xpomeraj;
 			}
-			else
-			{
+			else {
 				x = i % 8;
 				y = i / 8;
 			}
@@ -1800,8 +1673,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 	if (!wcscmp(tabla.polje[y - 1][x - 2].figura, KONJ) && tabla.polje[y - 1][x - 2].bojaFigure == BELO && JelUnutarTable(x - 2, y - 1))
 		return 1;
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y][x - i].figura, KRALJ) && tabla.polje[y][x - i].bojaFigure == CRNO)) && JelUnutarTable(x - i, y));
 		else if ((!wcscmp(tabla.polje[y][x - i].figura, TOP) || !wcscmp(tabla.polje[y][x - i].figura, KRALJICA)) && tabla.polje[y][x - i].bojaFigure == BELO && JelUnutarTable(x - i, y))
 			return 1;
@@ -1809,8 +1681,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y][x + i].figura, KRALJ) && tabla.polje[y][x + i].bojaFigure == CRNO)) && JelUnutarTable(x + i, y));
 		else if ((!wcscmp(tabla.polje[y][x + i].figura, TOP) || !wcscmp(tabla.polje[y][x + i].figura, KRALJICA)) && tabla.polje[y][x + i].bojaFigure == BELO && JelUnutarTable(x + i, y))
 			return 1;
@@ -1818,8 +1689,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x].figura, KRALJ) && tabla.polje[y - i][x].bojaFigure == CRNO)) && JelUnutarTable(x, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x].figura, TOP) || !wcscmp(tabla.polje[y - i][x].figura, KRALJICA)) && tabla.polje[y - i][x].bojaFigure == BELO && JelUnutarTable(x, y - i))
 			return 1;
@@ -1827,8 +1697,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x].figura, KRALJ) && tabla.polje[y + i][x].bojaFigure == CRNO)) && JelUnutarTable(x, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x].figura, TOP) || !wcscmp(tabla.polje[y + i][x].figura, KRALJICA)) && tabla.polje[y + i][x].bojaFigure == BELO && JelUnutarTable(x, y + i))
 			return 1;
@@ -1836,8 +1705,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x - i].figura, KRALJ) && tabla.polje[y - i][x - i].bojaFigure == CRNO)) && JelUnutarTable(x - i, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x - i].figura, LOVAC) || !wcscmp(tabla.polje[y - i][x - i].figura, KRALJICA)) && tabla.polje[y - i][x - i].bojaFigure == BELO && JelUnutarTable(x - i, y - i))
 			return 1;
@@ -1845,8 +1713,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y - i][x + i].figura, KRALJ) && tabla.polje[y - i][x + i].bojaFigure == CRNO)) && JelUnutarTable(x + i, y - i));
 		else if ((!wcscmp(tabla.polje[y - i][x + i].figura, LOVAC) || !wcscmp(tabla.polje[y - i][x + i].figura, KRALJICA)) && tabla.polje[y - i][x + i].bojaFigure == BELO && JelUnutarTable(x + i, y - i))
 			return 1;
@@ -1854,8 +1721,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x - i].figura, KRALJ) && tabla.polje[y + i][x - i].bojaFigure == CRNO)) && JelUnutarTable(x - i, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x - i].figura, LOVAC) || !wcscmp(tabla.polje[y + i][x - i].figura, KRALJICA)) && tabla.polje[y + i][x - i].bojaFigure == BELO && JelUnutarTable(x - i, y + i))
 			return 1;
@@ -1863,8 +1729,7 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
+	for (int i = 1; i < 8; i++) {
 		if ((!wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) || (!wcscmp(tabla.polje[y + i][x + i].figura, KRALJ) && tabla.polje[y + i][x + i].bojaFigure == CRNO)) && JelUnutarTable(x + i, y + i));
 		else if ((!wcscmp(tabla.polje[y + i][x + i].figura, LOVAC) || !wcscmp(tabla.polje[y + i][x + i].figura, KRALJICA)) && tabla.polje[y + i][x + i].bojaFigure == BELO && JelUnutarTable(x + i, y + i))
 			return 1;
@@ -1899,232 +1764,193 @@ short JelSahCrni(Tabla tabla, int xpomeraj, int ypomeraj)
 	return 0;
 }
 
-short PostaviKralja(Tabla& tabla, int x, int y)
-{
+short PostaviKralja(Tabla& tabla, int x, int y) {
 	short ret = 0;
 
 	tabla.polje[y][x].stanjePolja = IZABRANO;
 
-	if (tabla.polje[y][x].bojaFigure == BELO)
-	{
-		if ((!wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(tabla, -1, -1))
-		{
+	if (tabla.polje[y][x].bojaFigure == BELO) {
+		if ((!wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(tabla, -1, -1)) {
 			wcscpy(tabla.polje[y - 1][x - 1].figura, TACKA);
 			tabla.polje[y - 1][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(tabla, -1, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(tabla, -1, -1)) {
 			tabla.polje[y - 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(tabla, 1, -1))
-		{
+		if ((!wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(tabla, 1, -1)) {
 			wcscpy(tabla.polje[y - 1][x + 1].figura, TACKA);
 			tabla.polje[y - 1][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(tabla, 1, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(tabla, 1, -1)) {
 			tabla.polje[y - 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 1) && !JelSahBeli(tabla, -1, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 1) && !JelSahBeli(tabla, -1, 1)) {
 			wcscpy(tabla.polje[y + 1][x - 1].figura, TACKA);
 			tabla.polje[y + 1][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y + 1) && !JelSahBeli(tabla, -1, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y + 1) && !JelSahBeli(tabla, -1, 1)) {
 			tabla.polje[y + 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 1) && !JelSahBeli(tabla, 1, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 1) && !JelSahBeli(tabla, 1, 1)) {
 			wcscpy(tabla.polje[y + 1][x + 1].figura, TACKA);
 			tabla.polje[y + 1][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y + 1) && !JelSahBeli(tabla, 1, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y + 1) && !JelSahBeli(tabla, 1, 1)) {
 			tabla.polje[y + 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y) && !JelSahBeli(tabla, 1, 0))
-		{
+		if ((!wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y) && !JelSahBeli(tabla, 1, 0)) {
 			wcscpy(tabla.polje[y][x + 1].figura, TACKA);
 			tabla.polje[y][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) && tabla.polje[y][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y) && !JelSahBeli(tabla, 1, 0))
-		{
+		else if (wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) && tabla.polje[y][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y) && !JelSahBeli(tabla, 1, 0)) {
 			tabla.polje[y][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahBeli(tabla, 0, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahBeli(tabla, 0, 1)) {
 			wcscpy(tabla.polje[y + 1][x].figura, TACKA);
 			tabla.polje[y + 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) && tabla.polje[y + 1][x].bojaFigure == CRNO && JelUnutarTable(x, y + 1) && !JelSahBeli(tabla, 0, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) && tabla.polje[y + 1][x].bojaFigure == CRNO && JelUnutarTable(x, y + 1) && !JelSahBeli(tabla, 0, 1)) {
 			tabla.polje[y + 1][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y) && !JelSahBeli(tabla, -1, 0))
-		{
+		if ((!wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y) && !JelSahBeli(tabla, -1, 0)) {
 			wcscpy(tabla.polje[y][x - 1].figura, TACKA);
 			tabla.polje[y][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) && tabla.polje[y][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y) && !JelSahBeli(tabla, -1, 0))
-		{
+		else if (wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) && tabla.polje[y][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y) && !JelSahBeli(tabla, -1, 0)) {
 			tabla.polje[y][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahBeli(tabla, 0, -1))
-		{
+		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahBeli(tabla, 0, -1)) {
 			wcscpy(tabla.polje[y - 1][x].figura, TACKA);
 			tabla.polje[y - 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) && tabla.polje[y - 1][x].bojaFigure == CRNO && JelUnutarTable(x, y - 1) && !JelSahBeli(tabla, 0, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) && tabla.polje[y - 1][x].bojaFigure == CRNO && JelUnutarTable(x, y - 1) && !JelSahBeli(tabla, 0, -1)) {
 			tabla.polje[y - 1][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (tabla.malarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][5].figura, TACKA) && (!wcscmp(tabla.polje[7][6].figura, PRAZNO) || !wcscmp(tabla.polje[7][6].figura, TACKA)) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, 1, 0) && !JelSahBeli(tabla, 2, 0))
-		{
+		if (tabla.malarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][5].figura, TACKA) && (!wcscmp(tabla.polje[7][6].figura, PRAZNO) || !wcscmp(tabla.polje[7][6].figura, TACKA)) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, 1, 0) && !JelSahBeli(tabla, 2, 0)) {
 			wcscpy(tabla.polje[7][6].figura, TACKA);
 			tabla.polje[7][6].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (tabla.velikarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][3].figura, TACKA) && ((!wcscmp(tabla.polje[7][2].figura, PRAZNO) && !wcscmp(tabla.polje[7][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[7][2].figura, TACKA) && !wcscmp(tabla.polje[7][1].figura, TACKA))) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, -1, 0) && !JelSahBeli(tabla, -2, 0) && !JelSahBeli(tabla, -3, 0))
-		{
+		if (tabla.velikarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][3].figura, TACKA) && ((!wcscmp(tabla.polje[7][2].figura, PRAZNO) && !wcscmp(tabla.polje[7][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[7][2].figura, TACKA) && !wcscmp(tabla.polje[7][1].figura, TACKA))) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, -1, 0) && !JelSahBeli(tabla, -2, 0) && !JelSahBeli(tabla, -3, 0)) {
 			wcscpy(tabla.polje[7][1].figura, TACKA);
 			tabla.polje[7][1].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
 	}
-	else
-	{
-		if ((!wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 1) && !JelSahCrni(tabla, -1, -1))
-		{
+	else {
+		if ((!wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 1) && !JelSahCrni(tabla, -1, -1)) {
 			wcscpy(tabla.polje[y - 1][x - 1].figura, TACKA);
 			tabla.polje[y - 1][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y - 1) && !JelSahCrni(tabla, -1, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y - 1) && !JelSahCrni(tabla, -1, -1)) {
 			tabla.polje[y - 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 1) && !JelSahCrni(tabla, 1, -1))
-		{
+		if ((!wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 1) && !JelSahCrni(tabla, 1, -1)) {
 			wcscpy(tabla.polje[y - 1][x + 1].figura, TACKA);
 			tabla.polje[y - 1][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y - 1) && !JelSahCrni(tabla, 1, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y - 1) && !JelSahCrni(tabla, 1, -1)) {
 			tabla.polje[y - 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(tabla, -1, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(tabla, -1, 1)) {
 			wcscpy(tabla.polje[y + 1][x - 1].figura, TACKA);
 			tabla.polje[y + 1][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(tabla, -1, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(tabla, -1, 1)) {
 			tabla.polje[y + 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(tabla, 1, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(tabla, 1, 1)) {
 			wcscpy(tabla.polje[y + 1][x + 1].figura, TACKA);
 			tabla.polje[y + 1][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(tabla, 1, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(tabla, 1, 1)) {
 			tabla.polje[y + 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y) && !JelSahCrni(tabla, 1, 0))
-		{
+		if ((!wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y) && !JelSahCrni(tabla, 1, 0)) {
 			wcscpy(tabla.polje[y][x + 1].figura, TACKA);
 			tabla.polje[y][x + 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) && tabla.polje[y][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y) && !JelSahCrni(tabla, 1, 0))
-		{
+		else if (wcscmp(tabla.polje[y][x + 1].figura, PRAZNO) && tabla.polje[y][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y) && !JelSahCrni(tabla, 1, 0)) {
 			tabla.polje[y][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahCrni(tabla, 0, 1))
-		{
+		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahCrni(tabla, 0, 1)) {
 			wcscpy(tabla.polje[y + 1][x].figura, TACKA);
 			tabla.polje[y + 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) && tabla.polje[y + 1][x].bojaFigure == BELO && JelUnutarTable(x, y + 1) && !JelSahCrni(tabla, 0, 1))
-		{
+		else if (wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) && tabla.polje[y + 1][x].bojaFigure == BELO && JelUnutarTable(x, y + 1) && !JelSahCrni(tabla, 0, 1)) {
 			tabla.polje[y + 1][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y) && !JelSahCrni(tabla, -1, 0))
-		{
+		if ((!wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y) && !JelSahCrni(tabla, -1, 0)) {
 			wcscpy(tabla.polje[y][x - 1].figura, TACKA);
 			tabla.polje[y][x - 1].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) && tabla.polje[y][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y) && !JelSahCrni(tabla, -1, 0))
-		{
+		else if (wcscmp(tabla.polje[y][x - 1].figura, PRAZNO) && tabla.polje[y][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y) && !JelSahCrni(tabla, -1, 0)) {
 			tabla.polje[y][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahCrni(tabla, 0, -1))
-		{
+		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahCrni(tabla, 0, -1)) {
 			wcscpy(tabla.polje[y - 1][x].figura, TACKA);
 			tabla.polje[y - 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) && tabla.polje[y - 1][x].bojaFigure == BELO && JelUnutarTable(x, y - 1) && !JelSahCrni(tabla, 0, -1))
-		{
+		else if (wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) && tabla.polje[y - 1][x].bojaFigure == BELO && JelUnutarTable(x, y - 1) && !JelSahCrni(tabla, 0, -1)) {
 			tabla.polje[y - 1][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (tabla.malarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][5].figura, TACKA) && (!wcscmp(tabla.polje[0][6].figura, PRAZNO) || !wcscmp(tabla.polje[0][6].figura, TACKA)) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, 1, 0) && !JelSahCrni(tabla, 2, 0))
-		{
+		if (tabla.malarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][5].figura, TACKA) && (!wcscmp(tabla.polje[0][6].figura, PRAZNO) || !wcscmp(tabla.polje[0][6].figura, TACKA)) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, 1, 0) && !JelSahCrni(tabla, 2, 0)) {
 			wcscpy(tabla.polje[0][6].figura, TACKA);
 			tabla.polje[0][6].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (tabla.velikarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][3].figura, TACKA) && ((!wcscmp(tabla.polje[0][2].figura, PRAZNO) && !wcscmp(tabla.polje[0][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[0][2].figura, TACKA) && !wcscmp(tabla.polje[0][1].figura, TACKA))) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, -1, 0) && !JelSahCrni(tabla, -2, 0) && !JelSahCrni(tabla, -3, 0))
-		{
+		if (tabla.velikarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][3].figura, TACKA) && ((!wcscmp(tabla.polje[0][2].figura, PRAZNO) && !wcscmp(tabla.polje[0][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[0][2].figura, TACKA) && !wcscmp(tabla.polje[0][1].figura, TACKA))) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, -1, 0) && !JelSahCrni(tabla, -2, 0) && !JelSahCrni(tabla, -3, 0)) {
 			wcscpy(tabla.polje[0][1].figura, TACKA);
 			tabla.polje[0][1].bojaFigure = ZELENO;
 			ret = 1;
@@ -2134,88 +1960,73 @@ short PostaviKralja(Tabla& tabla, int x, int y)
 	return ret;
 }
 
-short PostaviPijuna(Tabla& tabla, int x, int y)
-{
+short PostaviPijuna(Tabla& tabla, int x, int y) {
 	short ret = 0;
 
 	tabla.polje[y][x].stanjePolja = IZABRANO;
 
-	if (tabla.polje[y][x].bojaFigure == BELO)
-	{
-		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - 1), 0, 0))
-		{
+	if (tabla.polje[y][x].bojaFigure == BELO) {
+		if ((!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && JelUnutarTable(x, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - 1), 0, 0)) {
 			wcscpy(tabla.polje[y - 1][x].figura, TACKA);
 			tabla.polje[y - 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (y == 6 && (!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && (!wcscmp(tabla.polje[y - 2][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x].figura, TACKA)) && JelUnutarTable(x, y - 2) && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - 2), 0, 0))
-		{
+		if (y == 6 && (!wcscmp(tabla.polje[y - 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x].figura, TACKA)) && (!wcscmp(tabla.polje[y - 2][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x].figura, TACKA)) && JelUnutarTable(x, y - 2) && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - 2), 0, 0)) {
 			wcscpy(tabla.polje[y - 2][x].figura, TACKA);
 			tabla.polje[y - 2][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 1), 0, 0))
-		{
+		if (wcscmp(tabla.polje[y - 1][x + 1].figura, PRAZNO) && tabla.polje[y - 1][x + 1].bojaFigure == CRNO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 1), 0, 0)) {
 			tabla.polje[y - 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 1), 0, 0))
-		{
+		if (wcscmp(tabla.polje[y - 1][x - 1].figura, PRAZNO) && tabla.polje[y - 1][x - 1].bojaFigure == CRNO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 1), 0, 0)) {
 			tabla.polje[y - 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (!wcscmp(tabla.polje[y][x + 1].figura, PIJUN) && tabla.polje[y][x + 1].bojaFigure == CRNO && tabla.polje[y][x + 1].anpasan == UKLJUCENO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 1), 0, 0))
-		{
+		if (!wcscmp(tabla.polje[y][x + 1].figura, PIJUN) && tabla.polje[y][x + 1].bojaFigure == CRNO && tabla.polje[y][x + 1].anpasan == UKLJUCENO && JelUnutarTable(x + 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 1), 0, 0)) {
 			tabla.polje[y - 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (!wcscmp(tabla.polje[y][x - 1].figura, PIJUN) && tabla.polje[y][x - 1].bojaFigure == CRNO && tabla.polje[y][x - 1].anpasan == UKLJUCENO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 1), 0, 0))
-		{
+		if (!wcscmp(tabla.polje[y][x - 1].figura, PIJUN) && tabla.polje[y][x - 1].bojaFigure == CRNO && tabla.polje[y][x - 1].anpasan == UKLJUCENO && JelUnutarTable(x - 1, y - 1) && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 1), 0, 0)) {
 			tabla.polje[y - 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 	}
-	else
-	{
-		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + 1), 0, 0))
-		{
+	else {
+		if ((!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && JelUnutarTable(x, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + 1), 0, 0)) {
 			wcscpy(tabla.polje[y + 1][x].figura, TACKA);
 			tabla.polje[y + 1][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (y == 1 && (!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && (!wcscmp(tabla.polje[y + 2][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x].figura, TACKA)) && JelUnutarTable(x, y + 2) && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + 2), 0, 0))
-		{
+		if (y == 1 && (!wcscmp(tabla.polje[y + 1][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x].figura, TACKA)) && (!wcscmp(tabla.polje[y + 2][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x].figura, TACKA)) && JelUnutarTable(x, y + 2) && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + 2), 0, 0)) {
 			wcscpy(tabla.polje[y + 2][x].figura, TACKA);
 			tabla.polje[y + 2][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
-		if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 1), 0, 0))
-		{
+		if (wcscmp(tabla.polje[y + 1][x + 1].figura, PRAZNO) && tabla.polje[y + 1][x + 1].bojaFigure == BELO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 1), 0, 0)) {
 			tabla.polje[y + 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 1), 0, 0))
-		{
+		if (wcscmp(tabla.polje[y + 1][x - 1].figura, PRAZNO) && tabla.polje[y + 1][x - 1].bojaFigure == BELO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 1), 0, 0)) {
 			tabla.polje[y + 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (!wcscmp(tabla.polje[y][x - 1].figura, PIJUN) && tabla.polje[y][x - 1].bojaFigure == BELO && tabla.polje[y][x - 1].anpasan == UKLJUCENO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 1), 0, 0))
-		{
+		if (!wcscmp(tabla.polje[y][x - 1].figura, PIJUN) && tabla.polje[y][x - 1].bojaFigure == BELO && tabla.polje[y][x - 1].anpasan == UKLJUCENO && JelUnutarTable(x - 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 1), 0, 0)) {
 			tabla.polje[y + 1][x - 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
 
-		if (!wcscmp(tabla.polje[y][x + 1].figura, PIJUN) && tabla.polje[y][x + 1].bojaFigure == BELO && tabla.polje[y][x + 1].anpasan == UKLJUCENO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 1), 0, 0))
-		{
+		if (!wcscmp(tabla.polje[y][x + 1].figura, PIJUN) && tabla.polje[y][x + 1].bojaFigure == BELO && tabla.polje[y][x + 1].anpasan == UKLJUCENO && JelUnutarTable(x + 1, y + 1) && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 1), 0, 0)) {
 			tabla.polje[y + 1][x + 1].stanjePolja = NAPADNUTO;
 			ret = 1;
 		}
@@ -2224,103 +2035,86 @@ short PostaviPijuna(Tabla& tabla, int x, int y)
 	return ret;
 }
 
-short PostaviKonja(Tabla& tabla, int x, int y)
-{
+short PostaviKonja(Tabla& tabla, int x, int y) {
 	short ret = 0;
 	tabla.polje[y][x].stanjePolja = IZABRANO;
 
-	if ((!wcscmp(tabla.polje[y - 2][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y - 2][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)))) {
 		wcscpy(tabla.polje[y - 2][x - 1].figura, TACKA);
 		tabla.polje[y - 2][x - 1].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y - 2][x - 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 2][x - 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 2][x - 1].bojaFigure == BELO)) && JelUnutarTable(x - 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y - 2][x - 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 2][x - 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 2][x - 1].bojaFigure == BELO)) && JelUnutarTable(x - 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y - 2), 0, 0)))) {
 		tabla.polje[y - 2][x - 1].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y - 2][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y - 2][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y - 2][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)))) {
 		wcscpy(tabla.polje[y - 2][x + 1].figura, TACKA);
 		tabla.polje[y - 2][x + 1].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y - 2][x + 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 2][x + 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 2][x + 1].bojaFigure == BELO)) && JelUnutarTable(x + 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y - 2][x + 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 2][x + 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 2][x + 1].bojaFigure == BELO)) && JelUnutarTable(x + 1, y - 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y - 2), 0, 0)))) {
 		tabla.polje[y - 2][x + 1].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y - 1][x + 2].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 2].figura, TACKA)) && JelUnutarTable(x + 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y - 1][x + 2].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x + 2].figura, TACKA)) && JelUnutarTable(x + 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)))) {
 		wcscpy(tabla.polje[y - 1][x + 2].figura, TACKA);
 		tabla.polje[y - 1][x + 2].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y - 1][x + 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 1][x + 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 1][x + 2].bojaFigure == BELO)) && JelUnutarTable(x + 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y - 1][x + 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 1][x + 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 1][x + 2].bojaFigure == BELO)) && JelUnutarTable(x + 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y - 1), 0, 0)))) {
 		tabla.polje[y - 1][x + 2].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y + 1][x + 2].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 2].figura, TACKA)) && JelUnutarTable(x + 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y + 1][x + 2].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x + 2].figura, TACKA)) && JelUnutarTable(x + 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)))) {
 		wcscpy(tabla.polje[y + 1][x + 2].figura, TACKA);
 		tabla.polje[y + 1][x + 2].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y + 1][x + 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 1][x + 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 1][x + 2].bojaFigure == BELO)) && JelUnutarTable(x + 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y + 1][x + 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 1][x + 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 1][x + 2].bojaFigure == BELO)) && JelUnutarTable(x + 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 2, y + 1), 0, 0)))) {
 		tabla.polje[y + 1][x + 2].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y + 2][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y + 2][x + 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x + 1].figura, TACKA)) && JelUnutarTable(x + 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)))) {
 		wcscpy(tabla.polje[y + 2][x + 1].figura, TACKA);
 		tabla.polje[y + 2][x + 1].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y + 2][x + 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 2][x + 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 2][x + 1].bojaFigure == BELO)) && JelUnutarTable(x + 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y + 2][x + 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 2][x + 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 2][x + 1].bojaFigure == BELO)) && JelUnutarTable(x + 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + 1, y + 2), 0, 0)))) {
 		tabla.polje[y + 2][x + 1].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y + 2][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y + 2][x - 1].figura, PRAZNO) || !wcscmp(tabla.polje[y + 2][x - 1].figura, TACKA)) && JelUnutarTable(x - 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)))) {
 		wcscpy(tabla.polje[y + 2][x - 1].figura, TACKA);
 		tabla.polje[y + 2][x - 1].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y + 2][x - 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 2][x - 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 2][x - 1].bojaFigure == BELO)) && JelUnutarTable(x - 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y + 2][x - 1].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 2][x - 1].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 2][x - 1].bojaFigure == BELO)) && JelUnutarTable(x - 1, y + 2) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 1, y + 2), 0, 0)))) {
 		tabla.polje[y + 2][x - 1].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y + 1][x - 2].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 2].figura, TACKA)) && JelUnutarTable(x - 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y + 1][x - 2].figura, PRAZNO) || !wcscmp(tabla.polje[y + 1][x - 2].figura, TACKA)) && JelUnutarTable(x - 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)))) {
 		wcscpy(tabla.polje[y + 1][x - 2].figura, TACKA);
 		tabla.polje[y + 1][x - 2].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y + 1][x - 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 1][x - 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 1][x - 2].bojaFigure == BELO)) && JelUnutarTable(x - 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y + 1][x - 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + 1][x - 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + 1][x - 2].bojaFigure == BELO)) && JelUnutarTable(x - 2, y + 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y + 1), 0, 0)))) {
 		tabla.polje[y + 1][x - 2].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
 
-	if ((!wcscmp(tabla.polje[y - 1][x - 2].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 2].figura, TACKA)) && JelUnutarTable(x - 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0))))
-	{
+	if ((!wcscmp(tabla.polje[y - 1][x - 2].figura, PRAZNO) || !wcscmp(tabla.polje[y - 1][x - 2].figura, TACKA)) && JelUnutarTable(x - 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)))) {
 		wcscpy(tabla.polje[y - 1][x - 2].figura, TACKA);
 		tabla.polje[y - 1][x - 2].bojaFigure = ZELENO;
 		ret = 1;
 	}
-	else if (wcscmp(tabla.polje[y - 1][x - 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 1][x - 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 1][x - 2].bojaFigure == BELO)) && JelUnutarTable(x - 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0))))
-	{
+	else if (wcscmp(tabla.polje[y - 1][x - 2].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - 1][x - 2].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - 1][x - 2].bojaFigure == BELO)) && JelUnutarTable(x - 2, y - 1) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - 2, y - 1), 0, 0)))) {
 		tabla.polje[y - 1][x - 2].stanjePolja = NAPADNUTO;
 		ret = 1;
 	}
@@ -2328,22 +2122,18 @@ short PostaviKonja(Tabla& tabla, int x, int y)
 	return ret;
 }
 
-short PostaviTopa(Tabla& tabla, int x, int y)
-{
+short PostaviTopa(Tabla& tabla, int x, int y) {
 	short ret = 0;
 
 	tabla.polje[y][x].stanjePolja = IZABRANO;
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - i].figura, TACKA)) && JelUnutarTable(x - i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y][x - i].figura, TACKA)) && JelUnutarTable(x - i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y), 0, 0)))) {
 			wcscpy(tabla.polje[y][x - i].figura, TACKA);
 			tabla.polje[y][x - i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y), 0, 0)))) {
 			tabla.polje[y][x - i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2352,16 +2142,13 @@ short PostaviTopa(Tabla& tabla, int x, int y)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + i].figura, TACKA)) && JelUnutarTable(x + i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y][x + i].figura, TACKA)) && JelUnutarTable(x + i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y), 0, 0)))) {
 			wcscpy(tabla.polje[y][x + i].figura, TACKA);
 			tabla.polje[y][x + i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y), 0, 0)))) {
 			tabla.polje[y][x + i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2370,16 +2157,13 @@ short PostaviTopa(Tabla& tabla, int x, int y)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y - i][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x].figura, TACKA)) && JelUnutarTable(x, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y - i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y - i][x].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x].figura, TACKA)) && JelUnutarTable(x, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y - i), 0, 0)))) {
 			wcscpy(tabla.polje[y - i][x].figura, TACKA);
 			tabla.polje[y - i][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - i][x].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x].bojaFigure == BELO)) && JelUnutarTable(x, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y - i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y - i][x].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x].bojaFigure == BELO)) && JelUnutarTable(x, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y - i), 0, 0)))) {
 			tabla.polje[y - i][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2388,16 +2172,13 @@ short PostaviTopa(Tabla& tabla, int x, int y)
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y + i][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x].figura, TACKA)) && JelUnutarTable(x, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y + i][x].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x].figura, TACKA)) && JelUnutarTable(x, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + i), 0, 0)))) {
 			wcscpy(tabla.polje[y + i][x].figura, TACKA);
 			tabla.polje[y + i][x].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + i][x].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x].bojaFigure == BELO)) && JelUnutarTable(x, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y + i][x].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x].bojaFigure == BELO)) && JelUnutarTable(x, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x, y + i), 0, 0)))) {
 			tabla.polje[y + i][x].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2414,16 +2195,13 @@ short PostaviLovca(Tabla& tabla, int x, int y) {
 
 	tabla.polje[y][x].stanjePolja = IZABRANO;
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x - i].figura, TACKA)) && JelUnutarTable(x - i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x - i].figura, TACKA)) && JelUnutarTable(x - i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)))) {
 			wcscpy(tabla.polje[y - i][x - i].figura, TACKA);
 			tabla.polje[y - i][x - i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y - i][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y - i), 0, 0)))) {
 			tabla.polje[y - i][x - i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2432,16 +2210,13 @@ short PostaviLovca(Tabla& tabla, int x, int y) {
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x + i].figura, TACKA)) && JelUnutarTable(x + i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y - i][x + i].figura, TACKA)) && JelUnutarTable(x + i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)))) {
 			wcscpy(tabla.polje[y - i][x + i].figura, TACKA);
 			tabla.polje[y - i][x + i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y - i][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y - i][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y - i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y - i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y - i), 0, 0)))) {
 			tabla.polje[y - i][x + i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2450,16 +2225,13 @@ short PostaviLovca(Tabla& tabla, int x, int y) {
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x - i].figura, TACKA)) && JelUnutarTable(x - i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x - i].figura, TACKA)) && JelUnutarTable(x - i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)))) {
 			wcscpy(tabla.polje[y + i][x - i].figura, TACKA);
 			tabla.polje[y + i][x - i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y + i][x - i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x - i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x - i].bojaFigure == BELO)) && JelUnutarTable(x - i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x - i, y + i), 0, 0)))) {
 			tabla.polje[y + i][x - i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2468,16 +2240,13 @@ short PostaviLovca(Tabla& tabla, int x, int y) {
 			break;
 	}
 
-	for (int i = 1; i < 8; i++)
-	{
-		if ((!wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x + i].figura, TACKA)) && JelUnutarTable(x + i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0))))
-		{
+	for (int i = 1; i < 8; i++) {
+		if ((!wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) || !wcscmp(tabla.polje[y + i][x + i].figura, TACKA)) && JelUnutarTable(x + i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)))) {
 			wcscpy(tabla.polje[y + i][x + i].figura, TACKA);
 			tabla.polje[y + i][x + i].bojaFigure = ZELENO;
 			ret = 1;
 		}
-		else if (wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0))))
-		{
+		else if (wcscmp(tabla.polje[y + i][x + i].figura, PRAZNO) && ((tabla.polje[y][x].bojaFigure == BELO && tabla.polje[y + i][x + i].bojaFigure == CRNO) || (tabla.polje[y][x].bojaFigure == CRNO && tabla.polje[y + i][x + i].bojaFigure == BELO)) && JelUnutarTable(x + i, y + i) && ((tabla.polje[y][x].bojaFigure == BELO && !JelSahBeli(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)) || (tabla.polje[y][x].bojaFigure == CRNO && !JelSahCrni(StaviFiguruNaXY(tabla, x + i, y + i), 0, 0)))) {
 			tabla.polje[y + i][x + i].stanjePolja = NAPADNUTO;
 			ret = 1;
 			break;
@@ -2489,8 +2258,7 @@ short PostaviLovca(Tabla& tabla, int x, int y) {
 	return ret;
 }
 
-short PostaviKraljicu(Tabla& tabla, int x, int y)
-{
+short PostaviKraljicu(Tabla& tabla, int x, int y) {
 	int ret = 0;
 	ret += PostaviLovca(tabla, x, y);
 	ret += PostaviTopa(tabla, x, y);
@@ -2501,46 +2269,38 @@ short PostaviKraljicu(Tabla& tabla, int x, int y)
 	return ret;
 }
 
-short JelMozeIgratiBeli(Tabla tabla)
-{
+short JelMozeIgratiBeli(Tabla tabla) {
 	short ret = 0;
 
 	for (int y = 0; y < 8; y++)
 		for (int x = 0; x < 8; x++)
-			if (tabla.polje[y][x].bojaFigure == BELO)
-			{
-				if (!wcscmp(tabla.polje[y][x].figura, KRALJ))
-				{
+			if (tabla.polje[y][x].bojaFigure == BELO) {
+				if (!wcscmp(tabla.polje[y][x].figura, KRALJ)) {
 					ret += PostaviKralja(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, PIJUN))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, PIJUN)) {
 					ret += PostaviPijuna(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, KONJ))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, KONJ)) {
 					ret += PostaviKonja(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, TOP))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, TOP)) {
 					ret += PostaviTopa(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, LOVAC))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, LOVAC)) {
 					ret += PostaviLovca(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA)) {
 					ret += PostaviKraljicu(tabla, x, y);
 
 					NoviPotez(tabla);
@@ -2553,46 +2313,38 @@ short JelMozeIgratiBeli(Tabla tabla)
 	return ret;
 }
 
-short JelMozeIgratiCrni(Tabla tabla)
-{
+short JelMozeIgratiCrni(Tabla tabla) {
 	short ret = 0;
 
 	for (int y = 0; y < 8; y++)
 		for (int x = 0; x < 8; x++)
-			if (tabla.polje[y][x].bojaFigure == CRNO)
-			{
-				if (!wcscmp(tabla.polje[y][x].figura, KRALJ))
-				{
+			if (tabla.polje[y][x].bojaFigure == CRNO) {
+				if (!wcscmp(tabla.polje[y][x].figura, KRALJ)) {
 					ret += PostaviKralja(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, PIJUN))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, PIJUN)) {
 					ret += PostaviPijuna(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, KONJ))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, KONJ)) {
 					ret += PostaviKonja(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, TOP))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, TOP)) {
 					ret += PostaviTopa(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, LOVAC))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, LOVAC)) {
 					ret += PostaviLovca(tabla, x, y);
 
 					NoviPotez(tabla);
 				}
-				else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA))
-				{
+				else if (!wcscmp(tabla.polje[y][x].figura, KRALJICA)) {
 					ret += PostaviKraljicu(tabla, x, y);
 
 					NoviPotez(tabla);
@@ -2605,8 +2357,7 @@ short JelMozeIgratiCrni(Tabla tabla)
 	return ret;
 }
 
-short ZameniPijuna()
-{
+short ZameniPijuna() {
 	int x, y, pom = 1, izb;
 
 	_setmode(_fileno(stdout), _O_U8TEXT);
@@ -2627,8 +2378,7 @@ short ZameniPijuna()
 	gotoxy(26, 14);
 	wprintf(KONJ);
 
-	while (pom)
-	{
+	while (pom) {
 		pom = 0;
 		UcitajKlik(x, y);
 
@@ -2649,8 +2399,7 @@ short ZameniPijuna()
 	return izb;
 }
 
-int FiguraUBroj(wchar_t figura[])
-{
+int FiguraUBroj(wchar_t figura[]) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	if (!wcscmp(figura, KRALJ))
@@ -2673,12 +2422,10 @@ int FiguraUBroj(wchar_t figura[])
 	return 6;
 }
 
-const wchar_t* BrojUFiguru(int broj)
-{
+const wchar_t* BrojUFiguru(int broj) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
-	switch (broj)
-	{
+	switch (broj) {
 	case 0:
 		return KRALJ;
 
@@ -2707,13 +2454,11 @@ const wchar_t* BrojUFiguru(int broj)
 	return PRAZNO;
 }
 
-vector<short> NapraviSacuvaj()
-{
+vector<short> NapraviSacuvaj() {
 	vector<short> memo;
 	memo.clear();
 
-	for (int a = 0; a <= brPoteza; a++)
-	{
+	for (int a = 0; a <= brPoteza; a++) {
 		memo.push_back(istorija[a].brdesno);
 		memo.push_back(istorija[a].brlevo);
 		memo.push_back(istorija[a].krajigre);
@@ -2722,15 +2467,13 @@ vector<short> NapraviSacuvaj()
 		memo.push_back(istorija[a].velikarbeli);
 		memo.push_back(istorija[a].velikarcrni);
 
-		for (int i = 0; i < 16; i++)
-		{
+		for (int i = 0; i < 16; i++) {
 			memo.push_back(FiguraUBroj(istorija[a].levo[i / 2][i % 2].figura));
 			memo.push_back(FiguraUBroj(istorija[a].desno[i / 2][i % 2].figura));
 		}
 
 		for (int i = 0; i < 8; i++)
-			for (int j = 0; j < 8; j++)
-			{
+			for (int j = 0; j < 8; j++) {
 				memo.push_back(istorija[a].polje[i][j].anpasan);
 				memo.push_back(istorija[a].polje[i][j].bojaFigure);
 				memo.push_back(FiguraUBroj(istorija[a].polje[i][j].figura));
@@ -2741,8 +2484,7 @@ vector<short> NapraviSacuvaj()
 	return memo;
 }
 
-void SacuvajIgru()
-{
+void SacuvajIgru() {
 	wchar_t ime[18], zn;
 	vector<short> memo;
 	ObrisiTerminal();
@@ -2760,33 +2502,28 @@ void SacuvajIgru()
 	gotoxy(4, 14);
 	printf("Ime igre:  ");
 
-	for (int i = 0; i < 18; i++)
-	{
+	for (int i = 0; i < 18; i++) {
 		fflush(stdin);
 		zn = _getwch();
 		fflush(stdin);
 
-		if ((zn == 13 && i != 0) || i == 14)
-		{
+		if ((zn == 13 && i != 0) || i == 14) {
 			Sleep(100);
 			ime[i] = '\0';
 			break;
 		}
-		else if (zn == 13)
-		{
+		else if (zn == 13) {
 			ObrisiTerminal();
 			SakriKursor();
 			return;
 		}
-		else if (zn == 8)
-		{
+		else if (zn == 8) {
 			gotoxy(14 + i, 14);
 			_putwch(L' ');
 			gotoxy(14 + i, 14);
 			i -= 2;
 		}
-		else
-		{
+		else {
 			gotoxy(15 + i, 14);
 			_putwch(zn);
 			ime[i] = zn;
@@ -2800,12 +2537,10 @@ void SacuvajIgru()
 
 	ofstream izlaz(wcscat(ime, L".igra"));
 
-	if (izlaz.is_open())
-	{
+	if (izlaz.is_open()) {
 		izlaz << brPoteza;
 
-		for (int i = 0; i < (brPoteza + 1) * 295; i++)
-		{
+		for (int i = 0; i < (brPoteza + 1) * 295; i++) {
 			if (!(i % 295))
 				izlaz << endl;
 
@@ -2818,8 +2553,7 @@ void SacuvajIgru()
 	memo.clear();
 }
 
-void OdaberiVelicinu()
-{
+void OdaberiVelicinu() {
 	velicina = (velicina - 15) / 2;
 	ObrisiTerminal();
 
@@ -2842,8 +2576,7 @@ void OdaberiVelicinu()
 	gotoxy(4, 14);
 	wprintf(L"Veličina: ");
 
-	for (int i = 1; i < velicina; i++)
-	{
+	for (int i = 1; i < velicina; i++) {
 		if (boja == SVETLO)
 			SetConsoleTextAttribute(ConsoleOutputHandle, 51);
 		else if (boja == TAMNO)
@@ -2863,8 +2596,7 @@ void OdaberiVelicinu()
 
 	wprintf(L"█");
 
-	for (int i = 15; i > velicina; i--)
-	{
+	for (int i = 15; i > velicina; i--) {
 		if (boja == SVETLO)
 			SetConsoleTextAttribute(ConsoleOutputHandle, 34);
 		else if (boja == TAMNO)
@@ -2882,13 +2614,11 @@ void OdaberiVelicinu()
 GOBACK1:
 	ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
-	if (input.Event.MouseEvent.dwButtonState != 0x0001)
-	{
+	if (input.Event.MouseEvent.dwButtonState != 0x0001) {
 	GOBACK2:
 		ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
-		if (input.Event.MouseEvent.dwButtonState == 0x0001 && input.Event.MouseEvent.dwMousePosition.Y == 14 && input.Event.MouseEvent.dwMousePosition.X > 13 && input.Event.MouseEvent.dwMousePosition.X < 29)
-		{
+		if (input.Event.MouseEvent.dwButtonState == 0x0001 && input.Event.MouseEvent.dwMousePosition.Y == 14 && input.Event.MouseEvent.dwMousePosition.X > 13 && input.Event.MouseEvent.dwMousePosition.X < 29) {
 		GOBACK3:
 			ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
 
@@ -2916,8 +2646,7 @@ GOBACK1:
 
 			gotoxy(14, 14);
 
-			for (int i = 1; i < velicina; i++)
-			{
+			for (int i = 1; i < velicina; i++) {
 				if (boja == SVETLO)
 					SetConsoleTextAttribute(ConsoleOutputHandle, 51);
 				else if (boja == TAMNO)
@@ -2937,8 +2666,7 @@ GOBACK1:
 
 			wprintf(L"█");
 
-			for (int i = 15; i > velicina; i--)
-			{
+			for (int i = 15; i > velicina; i--) {
 				if (boja == SVETLO)
 					SetConsoleTextAttribute(ConsoleOutputHandle, 34);
 				else if (boja == TAMNO)
@@ -2952,8 +2680,7 @@ GOBACK1:
 			if (input.Event.MouseEvent.dwButtonState == 0x0001)
 				goto GOBACK3;
 		}
-		else if (input.Event.MouseEvent.dwButtonState == 0x0001)
-		{
+		else if (input.Event.MouseEvent.dwButtonState == 0x0001) {
 
 		GOBACK4:
 			ReadConsoleInput(ConsoleInputHandle, &input, 1, &info);
@@ -3166,10 +2893,8 @@ GOBACK1:
 	return;
 } */
 
-BOOL WINAPI EXIT(DWORD CEvent)
-{
-	if (CEvent == CTRL_CLOSE_EVENT)
-	{
+BOOL WINAPI EXIT(DWORD CEvent) {
+	if (CEvent == CTRL_CLOSE_EVENT) {
 		EXITind = 1;
 		_setmode(_fileno(stdout), _O_U8TEXT);
 
@@ -3198,7 +2923,6 @@ BOOL WINAPI EXIT(DWORD CEvent)
 	return TRUE;
 }
 
-void SacuvajConsoleKey()
-{
+void SacuvajConsoleKey() {
 	system("reg export HKCU\\Console C:\\temp\\RegistryBackup.reg /y >nul 2>&1");
 }
