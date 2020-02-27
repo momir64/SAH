@@ -1,6 +1,5 @@
 ﻿#pragma warning(disable : 4996)
 #pragma warning(disable : 6031)
-#define _WIN32_WINNT 0x0600
 #define STRICT
 #include <string>
 #include <vector>
@@ -34,7 +33,6 @@
 // ●  ꞏ ⚫
 
 using namespace std;
-int a, b;
 
 const wchar_t	TOP[] = L"♜ ",
 KONJ[] = L"♞ ",
@@ -45,23 +43,16 @@ PIJUN[] = L"♟ ",
 PRAZNO[] = L"  ",
 TACKA[] = L"";
 
-void SakriKursor();
-void ObrisiEkran();
-void gotoxy(int x, int y);
-void UcitajKlik(int& x, int& y);
-void CentrirajKonzolu();
-
-short prviput1 = 1;
-short prviput2 = 1;
-short prviput3 = 1;
-short prviput4 = 1;
+int a, b;
+bool EXITind = 0;
+bool redo = 0;
 short boja = SVETLO;
 short rotacija = ISKLJUCENO;
 short sacekaj;
 short velicina = 29;
-unsigned long long int brPoteza = 0;
+long brPoteza = 0;
+long brPotezaMax = 0;
 long winlog;
-_CONSOLE_SCREEN_BUFFER_INFOEX screenbuffer;
 CONSOLE_CURSOR_INFO kursor;
 HANDLE ConsoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 HANDLE ConsoleInputHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -92,9 +83,15 @@ typedef struct
 
 vector<Tabla> istorija(0);
 
+void SakriKursor();
+void ObrisiEkran();
+void gotoxy(int x, int y);
+void UcitajKlik(int& x, int& y);
+void CentrirajKonzolu();
+BOOL SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);
+void SacuvajConsoleKey();
 void OsveziTablu(Tabla tabla);
 void PodesiKonzolu();
-void PodesiKonzolu2();
 void NapraviTablu(Tabla& tabla);
 void OdstampajTablu(Tabla tabla);
 void OdstampajKonzolu();
@@ -107,8 +104,6 @@ void ObrnutoOdstampajTablu(Tabla tabla);
 void ObrnutaPozicijaNaTabli(int& x, int& y);
 void ObrisiAnpasan(Tabla& tabla);
 void PodesiVelicinu(int i);
-BOOL RegDelnodeRecurse(HKEY hKeyRoot, LPTSTR lpSubKey);
-BOOL RegDelnode(HKEY hKeyRoot, LPCTSTR lpSubKey);
 void ObrisiTerminal();
 Tabla StaviFiguruNaXY(Tabla tabla, int x, int y);
 short JelSahBeli(Tabla tabla, int xpomeraj, int ypomeraj);
@@ -127,27 +122,25 @@ const wchar_t* BrojUFiguru(int broj);
 vector<short> NapraviSacuvaj();
 void SacuvajIgru();
 void OdaberiVelicinu();
-void AnimacijaUcitaj();
+//void AnimacijaUcitaj();
 BOOL WINAPI EXIT(DWORD CEvent);
 
 int main()
 {
+	system("MODE 16, 1");
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)EXIT, TRUE);
+	SacuvajConsoleKey();
 
 	Tabla tabla;
 	NapraviTablu(tabla);
 	istorija.push_back(tabla);
 
-	AnimacijaUcitaj();
-
 	PodesiKonzolu();
 	CentrirajKonzolu();
-	PodesiKonzolu2();
 	OdstampajKonzolu();
 	OdstampajTablu(tabla);
 
 	int x, y, xizb, yizb, i = 35;
-	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	while (1)
 	{
@@ -205,7 +198,6 @@ int main()
 		}
 
 		sacekaj = ISKLJUCENO;
-		SetConsoleTextAttribute(ConsoleOutputHandle, 82);
 
 		UcitajKlik(x, y);
 		ObrisiTerminal();
@@ -368,9 +360,19 @@ int main()
 		}
 		else if (y == 0 && (x == 10 || x == 11) && brPoteza > 0)
 		{
-			tabla = istorija[brPoteza - 1];
-			istorija.erase(istorija.begin() + brPoteza);
+			tabla = istorija[brPoteza - (long long)1];
+			if (brPotezaMax < brPoteza)
+				brPotezaMax = brPoteza;
 			brPoteza--;
+			redo = 1;
+			ObrisiTerminal();
+
+			OsveziTablu(tabla);
+		}
+		else if (y == 0 && (x == 12 || x == 13) && brPotezaMax > 0 && redo && brPotezaMax > brPoteza)
+		{
+			tabla = istorija[brPoteza + (long long)1];
+			brPoteza++;
 			ObrisiTerminal();
 
 			OsveziTablu(tabla);
@@ -431,7 +433,7 @@ int main()
 			OdstampajKonzolu();
 			OdstampajTablu(tabla);
 		}
-		else if (y > 2 && y < 11 && x > 9 && x < 26 && tabla.krajigre == 0)
+		else if (y > 2 && y < 11 && x > 9 && x < 26 && tabla.krajigre == 0 && JelMozeIgratiBeli(tabla) && JelMozeIgratiBeli(tabla))
 		{
 			if (brPoteza % 2 && rotacija == UKLJUCENO && JelMozeIgratiCrni(tabla))
 				ObrnutaPozicijaNaTabli(x, y);
@@ -554,8 +556,14 @@ int main()
 							break;
 						}
 
+				for (long i = brPotezaMax; i > brPoteza&& redo; i--)
+				{
+					istorija.erase(istorija.begin() + i);
+					brPotezaMax = brPoteza;
+				}
 				istorija.push_back(tabla);
 				brPoteza++;
+				redo = false;
 				sacekaj = UKLJUCENO;
 
 			}
@@ -731,8 +739,14 @@ int main()
 							break;
 						}
 
+				for (long i = brPotezaMax; i > brPoteza&& redo; i--)
+				{
+					istorija.erase(istorija.begin() + i);
+					brPotezaMax = brPoteza;
+				}
 				istorija.push_back(tabla);
 				brPoteza++;
+				redo = false;
 				sacekaj = UKLJUCENO;
 			}
 
@@ -743,10 +757,7 @@ int main()
 			NoviPotez(tabla);
 			OsveziTablu(tabla);
 		}
-
 	}
-
-
 }
 
 void NapraviTablu(Tabla& tabla)
@@ -828,12 +839,6 @@ void NapraviTablu(Tabla& tabla)
 
 void SakriKursor()
 {
-	if (prviput3)
-	{
-		GetConsoleCursorInfo(ConsoleOutputHandle, &kursor);
-		prviput3 = 0;
-	}
-
 	CONSOLE_CURSOR_INFO info;
 	info.dwSize = 100;
 	info.bVisible = FALSE;
@@ -846,7 +851,6 @@ void ObrisiEkran()
 	DWORD count;
 	DWORD cellCount;
 	COORD homeCoords = { 0, 0 };
-
 
 	if (ConsoleOutputHandle == INVALID_HANDLE_VALUE)
 		return;
@@ -914,45 +918,29 @@ void CentrirajKonzolu()
 
 void PodesiKonzolu()
 {
+	GetConsoleCursorInfo(ConsoleOutputHandle, &kursor);
+	SakriKursor();
 	HWND consoleWindow = GetConsoleWindow();
-
 	HMENU hmenu = GetSystemMenu(consoleWindow, FALSE);
-	//EnableMenuItem(hmenu, SC_CLOSE, MF_GRAYED); ////////////////////////////////////////////////////////////////////////////////////////////
-
-	if (prviput1)
-	{
-		winlog = GetWindowLong(consoleWindow, GWL_STYLE);
-		SetWindowLong(consoleWindow, GWL_STYLE, winlog & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX & ~WS_VSCROLL);
-		prviput1 = 0;
-	}
-	else
-		SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX & ~WS_VSCROLL);
-
-
-	SetConsoleMode(ConsoleInputHandle, ENABLE_EXTENDED_FLAGS);
-
-	_setmode(_fileno(stdout), _O_U8TEXT);
-	SetConsoleTitleW(L"ŠAH");
-	_setmode(_fileno(stdout), _O_TEXT);
-
-	if (boja == SVETLO)
-		system("color 23");
-	else if (boja == TAMNO)
-		system("color 56");
-	else if (boja == SIVO)
-		system("color 89");
-
+	CONSOLE_FONT_INFOEX infof = { 0 };
 	_CONSOLE_SCREEN_BUFFER_INFOEX info;
+
+	infof.cbSize = sizeof(infof);
+	infof.dwFontSize.Y = velicina;
+	infof.FontWeight = FW_NORMAL;
+	wcscpy(infof.FaceName, L"MS Gothic");
+	SetCurrentConsoleFontEx(ConsoleOutputHandle, NULL, &infof);
+
+	CentrirajKonzolu();
+
+	winlog = GetWindowLong(consoleWindow, GWL_STYLE);
+	SetWindowLong(consoleWindow, GWL_STYLE, winlog & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX & ~WS_VSCROLL);
+	SetConsoleMode(ConsoleInputHandle, ENABLE_EXTENDED_FLAGS);
+	SetConsoleTitleW(L"ŠAH");
+
+	info.dwSize = { 36, 17 };
 	info.cbSize = sizeof(info);
 	GetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
-
-	if (prviput2)
-	{
-		screenbuffer = info;
-		prviput2 = 0;
-	}
-
-	info.dwSize = { 36, 19 };
 	info.ColorTable[0] = RGB(242, 242, 242);
 	info.ColorTable[1] = RGB(10, 10, 10);
 	info.ColorTable[2] = RGB(198, 175, 141);
@@ -969,21 +957,10 @@ void PodesiKonzolu()
 	info.ColorTable[13] = RGB(10, 10, 130);
 	info.ColorTable[14] = RGB(240, 191, 40);
 	info.ColorTable[15] = RGB(255, 255, 255);
-
 	SetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
-	PodesiVelicinu(velicina);
-	OdstampajKonzolu();
-	SakriKursor();
-	system("MODE 37, 18");
-}
-
-void PodesiKonzolu2()
-{
-	_CONSOLE_SCREEN_BUFFER_INFOEX info;
-	info.cbSize = sizeof(info);
-	GetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
-	info.dwSize = { 36, 17 };
-	SetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
+	system("MODE 36, 17");
+	system("color 23");
+	_setmode(_fileno(stdout), _O_U8TEXT);
 }
 
 void PodesiVelicinu(int i)
@@ -997,8 +974,7 @@ void PodesiVelicinu(int i)
 
 	CentrirajKonzolu();
 	CentrirajKonzolu();
-	system("MODE 37, 18");
-	PodesiKonzolu2();
+	system("MODE 36, 17");
 }
 
 void OdstampajTablu(Tabla tabla)
@@ -1428,8 +1404,9 @@ void OdstampajKonzolu()
 	// gear 
 	wprintf(L"");  // color
 	wprintf(L"");  // resize
-	wprintf(L"");  // back
-	wprintf(L"                    "); // space
+	wprintf(L"");  // undo
+	wprintf(L"");  // redo
+	wprintf(L"                  "); // space
 
 	if (rotacija == UKLJUCENO)
 		wprintf(L"");  // rotation 
@@ -1585,66 +1562,6 @@ void OsveziTablu(Tabla tabla)
 
 		OdstampajTablu(tabla);
 	}
-}
-
-BOOL RegDelnodeRecurse(HKEY hKeyRoot, LPTSTR lpSubKey)
-{
-	LPTSTR lpEnd;
-	LONG lResult;
-	DWORD dwSize;
-	TCHAR szName[MAX_PATH];
-	HKEY hKey;
-	FILETIME ftWrite;
-	lResult = RegDeleteKey(hKeyRoot, lpSubKey);
-	if (lResult == ERROR_SUCCESS)
-		return TRUE;
-	lResult = RegOpenKeyEx(hKeyRoot, lpSubKey, 0, KEY_READ, &hKey);
-	if (lResult != ERROR_SUCCESS && lResult == ERROR_FILE_NOT_FOUND) {
-		printf("Key not found.\n");
-		return TRUE;
-	}
-	else if (lResult != ERROR_SUCCESS) {
-		printf("Error opening key.\n");
-		return FALSE;
-	}
-	lpEnd = lpSubKey + lstrlen(lpSubKey);
-	if (*(lpEnd - 1) != TEXT('\\'))
-	{
-		*lpEnd = TEXT('\\');
-		lpEnd++;
-		*lpEnd = TEXT('\0');
-	}
-	dwSize = MAX_PATH;
-	lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
-		NULL, NULL, &ftWrite);
-	if (lResult == ERROR_SUCCESS)
-	{
-		do {
-			*lpEnd = TEXT('\0');
-			StringCchCat(lpSubKey, MAX_PATH * 2, szName);
-			if (!RegDelnodeRecurse(hKeyRoot, lpSubKey))
-				break;
-			dwSize = MAX_PATH;
-			lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
-				NULL, NULL, &ftWrite);
-
-		} while (lResult == ERROR_SUCCESS);
-	}
-	lpEnd--;
-	*lpEnd = TEXT('\0');
-	RegCloseKey(hKey);
-	lResult = RegDeleteKey(hKeyRoot, lpSubKey);
-	if (lResult == ERROR_SUCCESS)
-		return TRUE;
-	return FALSE;
-}
-
-BOOL RegDelnode(HKEY hKeyRoot, LPCTSTR lpSubKey)
-{
-	TCHAR szDelKey[MAX_PATH * 2];
-	StringCchCopy(szDelKey, MAX_PATH * 2, lpSubKey);
-	return RegDelnodeRecurse(hKeyRoot, szDelKey);
-
 }
 
 void ObrisiTerminal()
@@ -3061,15 +2978,13 @@ GOBACK1:
 	velicina = velicina * 2 + 15;
 }
 
-void AnimacijaUcitaj()
+/*void AnimacijaUcitaj()
 {
 	system("MODE 36, 18");
 	PodesiVelicinu(velicina);
-	system("MODE 36, 1");
 
 	HWND consoleWindow = GetConsoleWindow();
 	HMENU hmenu = GetSystemMenu(consoleWindow, FALSE);
-	//EnableMenuItem(hmenu, SC_CLOSE, MF_GRAYED); ////////////////////////////////////////////////////////////////////////////////////////////
 
 	winlog = GetWindowLong(consoleWindow, GWL_STYLE);
 	SetWindowLong(consoleWindow, GWL_STYLE, winlog & ~WS_MAXIMIZEBOX & ~WS_SIZEBOX & ~WS_VSCROLL);
@@ -3079,14 +2994,13 @@ void AnimacijaUcitaj()
 	_CONSOLE_SCREEN_BUFFER_INFOEX info;
 	info.cbSize = sizeof(info);
 	GetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
-
 	info.ColorTable[2] = RGB(198, 175, 141);
 	info.ColorTable[3] = RGB(114, 71, 56);
-
 	SetConsoleScreenBufferInfoEx(ConsoleOutputHandle, &info);
 	SakriKursor();
 
-	system("color 23");
+	SetConsoleTextAttribute(ConsoleOutputHandle, 35);
+	wprintf(L"\n");
 
 	char str[20];
 
@@ -3094,12 +3008,12 @@ void AnimacijaUcitaj()
 	{
 		sprintf(str, "MODE 36, %d", i);
 		system(str);
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 	}
 
 	Sleep(200);
-	if (_kbhit())
+	if (_kbhit() || EXITind)
 		return;
 
 	gotoxy(6, 2);
@@ -3109,138 +3023,138 @@ void AnimacijaUcitaj()
 
 	for (int i = 0; i < 2; i++)
 	{
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(17, 8);
 		wprintf(L"● ");
 		Sleep(250);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(21, 9);
 		wprintf(L"● ");
 		Sleep(220);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(23, 11);
 		wprintf(L"● ");
 		Sleep(150);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(21, 13);
 		wprintf(L"● ");
 		Sleep(70);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(17, 14);
 		wprintf(L"● ");
 		Sleep(90);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(13, 13);
 		wprintf(L"● ");
 		Sleep(105);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(11, 11);
 		wprintf(L"● ");
 		Sleep(120);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(13, 9);
 		wprintf(L"● ");
 		Sleep(260);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(21, 9);
 		wprintf(L"  ");
 		Sleep(250);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(23, 11);
 		wprintf(L"  ");
 		Sleep(220);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(21, 13);
 		wprintf(L"  ");
 		Sleep(150);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(17, 14);
 		wprintf(L"  ");
 		Sleep(70);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(13, 13);
 		wprintf(L"  ");
 		Sleep(90);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(11, 11);
 		wprintf(L"  ");
 		Sleep(105);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		gotoxy(13, 9);
 		wprintf(L"  ");
 		Sleep(260);
 
-		if (_kbhit())
+		if (_kbhit() || EXITind)
 			return;
 
 		if (i)
 		{
-			if (_kbhit())
+			if (_kbhit() || EXITind)
 				return;
 
 			gotoxy(17, 8);
 			wprintf(L"● ");
 			Sleep(250);
 
-			if (_kbhit())
+			if (_kbhit() || EXITind)
 				return;
 
 			gotoxy(21, 9);
 			wprintf(L"● ");
 			Sleep(220);
 
-			if (_kbhit())
+			if (_kbhit() || EXITind)
 				return;
 
 			gotoxy(23, 11);
 			wprintf(L"● ");
 			Sleep(150);
 
-			if (_kbhit())
+			if (_kbhit() || EXITind)
 				return;
 
 			gotoxy(21, 13);
@@ -3248,16 +3162,15 @@ void AnimacijaUcitaj()
 
 			Sleep(550);
 		}
-
 	}
-
 	return;
-}
+} */
 
 BOOL WINAPI EXIT(DWORD CEvent)
 {
 	if (CEvent == CTRL_CLOSE_EVENT)
 	{
+		EXITind = 1;
 		_setmode(_fileno(stdout), _O_U8TEXT);
 
 		istorija.clear();
@@ -3275,9 +3188,17 @@ BOOL WINAPI EXIT(DWORD CEvent)
 		gotoxy(13, 6);
 		wprintf(L"DOVIĐENJA!");
 
-		Sleep(1111);
+		HKEY key;
+		RegOpenKeyA(HKEY_CURRENT_USER, "Console", &key);
+		RegDeleteTreeA(key, NULL);
+		system("reg import C:\\temp\\RegistryBackup.reg >nul 2>&1");
 
-		RegDelnode(HKEY_CURRENT_USER, TEXT("Console"));
+		Sleep(999);
 	}
 	return TRUE;
+}
+
+void SacuvajConsoleKey()
+{
+	system("reg export HKCU\\Console C:\\temp\\RegistryBackup.reg /y >nul 2>&1");
 }
