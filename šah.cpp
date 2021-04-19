@@ -86,7 +86,6 @@ void ObrisiEkran();
 void gotoxy(int x, int y);
 void UcitajKlik(int& x, int& y);
 void CentrirajKonzolu();
-BOOL SetPrivilege(HANDLE hToken, LPCTSTR lpszPrivilege, BOOL bEnablePrivilege);
 void SacuvajConsoleKey();
 void OsveziTablu(Tabla tabla);
 void PodesiKonzolu();
@@ -590,7 +589,7 @@ int main() {
 					tabla.polje[7][5].bojaFigure = BELO;
 				}
 
-				if (tabla.velikarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 1 && y == 7) {
+				if (tabla.velikarbeli == UKLJUCENO && xizb == 4 && yizb == 7 && x == 2 && y == 7) {
 					wcscpy(tabla.polje[7][0].figura, PRAZNO);
 					wcscpy(tabla.polje[7][1].figura, PRAZNO);
 					wcscpy(tabla.polje[7][2].figura, KRALJ);
@@ -605,7 +604,7 @@ int main() {
 					tabla.polje[0][5].bojaFigure = CRNO;
 				}
 
-				if (tabla.velikarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 1 && y == 0) {
+				if (tabla.velikarcrni == UKLJUCENO && xizb == 4 && yizb == 0 && x == 2 && y == 0) {
 					wcscpy(tabla.polje[0][0].figura, PRAZNO);
 					wcscpy(tabla.polje[0][1].figura, PRAZNO);
 					wcscpy(tabla.polje[0][2].figura, KRALJ);
@@ -839,7 +838,6 @@ void PodesiKonzolu() {
 	GetConsoleCursorInfo(ConsoleOutputHandle, &kursor);
 	SakriKursor();
 	HWND consoleWindow = GetConsoleWindow();
-	HMENU hmenu = GetSystemMenu(consoleWindow, FALSE);
 	CONSOLE_FONT_INFOEX infof = { 0 };
 	_CONSOLE_SCREEN_BUFFER_INFOEX info;
 
@@ -954,8 +952,8 @@ void OdstampajTablu(Tabla tabla) {
 void ObrnutoOdstampajTablu(Tabla tabla) {
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++) {
+	for (int i = 7; i >= 0; i--)
+		for (int j = 7; j >= 0; j--) {
 			if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == CRNO)
 				SetConsoleTextAttribute(ConsoleOutputHandle, 177);
 			else if (tabla.polje[i][j].stanjePolja == IZABRANO && tabla.polje[i][j].bojaFigure == BELO)
@@ -1855,9 +1853,9 @@ short PostaviKralja(Tabla& tabla, int x, int y) {
 			ret = 1;
 		}
 
-		if (tabla.velikarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][3].figura, TACKA) && ((!wcscmp(tabla.polje[7][2].figura, PRAZNO) && !wcscmp(tabla.polje[7][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[7][2].figura, TACKA) && !wcscmp(tabla.polje[7][1].figura, TACKA))) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, -1, 0) && !JelSahBeli(tabla, -2, 0) && !JelSahBeli(tabla, -3, 0)) {
-			wcscpy(tabla.polje[7][1].figura, TACKA);
-			tabla.polje[7][1].bojaFigure = ZELENO;
+		if (tabla.velikarbeli == UKLJUCENO && !wcscmp(tabla.polje[7][3].figura, TACKA) && (!wcscmp(tabla.polje[7][2].figura, PRAZNO) || !wcscmp(tabla.polje[7][2].figura, TACKA)) && !JelSahBeli(tabla, 0, 0) && !JelSahBeli(tabla, -1, 0) && !JelSahBeli(tabla, -2, 0)) {
+			wcscpy(tabla.polje[7][2].figura, TACKA);
+			tabla.polje[7][2].bojaFigure = ZELENO;
 			ret = 1;
 		}
 
@@ -1949,9 +1947,9 @@ short PostaviKralja(Tabla& tabla, int x, int y) {
 			ret = 1;
 		}
 
-		if (tabla.velikarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][3].figura, TACKA) && ((!wcscmp(tabla.polje[0][2].figura, PRAZNO) && !wcscmp(tabla.polje[0][1].figura, PRAZNO)) || (!wcscmp(tabla.polje[0][2].figura, TACKA) && !wcscmp(tabla.polje[0][1].figura, TACKA))) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, -1, 0) && !JelSahCrni(tabla, -2, 0) && !JelSahCrni(tabla, -3, 0)) {
-			wcscpy(tabla.polje[0][1].figura, TACKA);
-			tabla.polje[0][1].bojaFigure = ZELENO;
+		if (tabla.velikarcrni == UKLJUCENO && !wcscmp(tabla.polje[0][3].figura, TACKA) && (!wcscmp(tabla.polje[0][2].figura, PRAZNO) || !wcscmp(tabla.polje[0][2].figura, TACKA)) && !JelSahCrni(tabla, 0, 0) && !JelSahCrni(tabla, -1, 0) && !JelSahCrni(tabla, -2, 0)) {
+			wcscpy(tabla.polje[0][2].figura, TACKA);
+			tabla.polje[0][2].bojaFigure = ZELENO;
 			ret = 1;
 		}
 	}
